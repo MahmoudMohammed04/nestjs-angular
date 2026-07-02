@@ -1,20 +1,28 @@
 import { BadRequestException, ForbiddenException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
-import * as argon2 from 'argon2';
 import { Prisma } from '@prisma/client';
-
 import { CreateAccountDto } from './dtos/create-account.dto';
-import { MailService } from './mail/mail.service';
-import { randomBytes, randomInt } from 'crypto';
 
 @Injectable()
 export class AuthService {
     constructor(private readonly prisma: PrismaService) {}
     
   
-    async createAccount(dto: Prisma.UserCreateInput) {
-       
+    async createAccount(req:{id: string , email: string , pictureUrl: string},dto: CreateAccountDto) {
+        const user = await this.prisma.user.create(
+            {
+                data: {
+                    id: req.id,
+                    email: req.email,
+                    username: dto.username,
+                    normalizedUsername: dto.username.trim().toUpperCase(),
+                    phone: dto.phone,
+                    pictureUrl: req.pictureUrl,
+                }
+            }
+        );
+
+        return user;
     }
 
 

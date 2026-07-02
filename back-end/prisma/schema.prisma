@@ -12,6 +12,7 @@ datasource db {
 
 model User{
   id String @id 
+  email String @unique
   username String
   normalizedUsername String
   phone String
@@ -20,6 +21,8 @@ model User{
   messages Message[]
   messagesStatus MessageStatus[]
   memberships ConversationMember[]
+
+  @@index([normalizedUsername])
 }
 
 model Conversation{
@@ -27,8 +30,8 @@ model Conversation{
   name String?
   imageUrl String?
   isGroup Boolean
-  lastMessageId Int
-  lastMessageTime DateTime
+  lastMessageId Int?
+  lastMessageTime DateTime?
   membersCount Int
 
   messages Message[]
@@ -44,9 +47,9 @@ model ConversationMember {
   role ConversationRole @default(member)
   joinedAt DateTime @default(now())
   
-  lastReadedMessageId Int
+  lastReadedMessageId Int?
   lastReadedMessage Message? @relation(name: "lastReadedMessage",fields: [lastReadedMessageId],references: [id],onDelete: SetNull)  
-  lastDeliveredMessageId Int
+  lastDeliveredMessageId Int?
   lastDeliveredMessage Message? @relation(name: "lastDeliveredMessage", fields: [lastDeliveredMessageId],references: [id],onDelete: SetNull) 
 
   @@id([userId, conversationId])
