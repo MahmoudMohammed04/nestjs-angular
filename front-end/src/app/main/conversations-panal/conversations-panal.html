@@ -1,0 +1,35 @@
+<div class="flex h-screen w-full">
+<section class="w-full md:w-full h-full bg-surface-container-lowest border-r border-outline-variant flex flex-col z-10">
+
+    <!-- Search Header -->
+    <div class="p-6 border-b border-outline-variant/30">
+        <h2 class="font-headline-md text-headline-md mb-4">Messages</h2>
+            <div class="relative group">
+                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/4 text-on-surface-variant">search</span>
+                <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full text-body-md transition-all" placeholder="Search conversations..." type="text">
+            </div>
+    </div>
+
+    <!-- Conversation List -->
+    <div class="flex-1 overflow-y-auto scrollbar-hide">
+        <app-coversation-item [selected]="true"></app-coversation-item>
+        <app-coversation-item ></app-coversation-item>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="px-4 mt-auto border-t border-outline-variant pt-4 bg-white">
+        <a class="flex items-center gap-4 px-4 py-3 text-on-surface-variant dark:text-surface-variant font-label-md hover:bg-surface-container-low transition-colors rounded-lg" href="#">
+            <span class="material-symbols-outlined">settings</span>
+                                Settings
+        </a>
+            <div class="mt-4 px-4 flex items-center gap-3 pb-4">
+                <img class="w-10 h-10 rounded-full border-2 border-white shadow-sm object-cover" data-alt="A clean, professional headshot of a young creative professional with a friendly smile, photographed in a bright studio with soft lighting. The background is a solid, subtle pastel blue, matching a modern light-mode interface aesthetic. The image is crisp and clear, conveying trust and approachability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfBCmvp1Q87pv1tmXrCS94Q09CWvYqL7WF6OoGBG5jes-C7zMX91n5gAOWBSOUlQLi9gpx2mvQfuWsjGR29jvDw3or79jIZ4gSfrM3lQ2x423KTHd2cFKeQ0yZwMk_g-rofVKhMwj8Z8be6gC6sW-WQZpsVfCVIpzUr9tWCQuNR-H2TJbsTA2g4n_URoQyKWxlbTi5LpJ3Os41oT5W3NchWv2vpyKKzzVnq67qM47wEzbNuiJfcNh-SHL2_hngzfSxlP8zV6TTGiZ0">
+                    <div class="flex-1 overflow-hidden">
+                     <p class="text-label-md truncate">Julian Pearce</p>
+                <p class="text-[10px] text-on-surface-variant">Active Now</p>
+            </div>
+        </div>
+    </div>
+
+</section>
+</div>

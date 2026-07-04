@@ -1,4 +1,4 @@
 export class createGroupDto{
-    receiversId: string[];
+    receiversId: string[]
     name: string
 }

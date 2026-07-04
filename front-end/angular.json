@@ -14,7 +14,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@ngx-env/builder:application",
+          "builder": "@angular/build:application",
           "options": {
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
@@ -24,7 +24,9 @@
                 "input": "public"
               }
             ],
-            "styles": ["src/styles.css"]
+            "styles": [
+              "src/styles.css"
+            ]
           },
           "configurations": {
             "production": {
@@ -51,7 +53,7 @@
           "defaultConfiguration": "production"
         },
         "serve": {
-          "builder": "@ngx-env/builder:dev-server",
+          "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
               "buildTarget": "front-end:build:production"
@@ -60,12 +62,10 @@
               "buildTarget": "front-end:build:development"
             }
           },
-          "defaultConfiguration": "development",
-          "options": {}
+          "defaultConfiguration": "development"
         },
         "test": {
-          "builder": "@ngx-env/builder:unit-test",
-          "options": {}
+          "builder": "@angular/build:unit-test"
         }
       }
     }

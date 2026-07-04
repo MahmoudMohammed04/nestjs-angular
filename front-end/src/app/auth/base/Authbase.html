@@ -1,0 +1,20 @@
+ <div class="bg-mesh min-h-screen flex flex-col font-body-md text-on-surface">
+      <header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant shadow-sm">
+        <div class="flex justify-between items-center w-full px-6 md:px-margin-desktop py-4 max-w-container-max mx-auto">
+          <div class="flex items-center gap-8">
+            <a routerLink="/" class="font-headline-lg text-headline-lg font-extrabold text-primary tracking-tight">FlowChat</a>
+          </div>
+        </div>
+      </header>
+
+      <router-outlet></router-outlet>
+
+      <footer class="bg-surface-container-lowest border-t border-outline-variant mt-auto">
+        <div class="flex flex-col md:flex-row justify-between items-center w-full px-6 md:px-margin-desktop py-8 max-w-container-max mx-auto gap-6">
+          <div class="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+            <span class="font-headline-md text-headline-md font-bold text-on-surface">FlowChat</span>
+            <p class="text-caption text-on-surface-variant">© 2024 FlowChat Inc. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
+    </div>

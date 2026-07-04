@@ -1,0 +1,147 @@
+<div class="flex h-screen w-full">
+    <main class="flex-1 flex flex-col relative h-full bg-background">
+
+        <!-- TopAppBar Anchor -->
+        <header class="z-50 glass-panel flex justify-between items-center w-full px-8 py-4 border-b border-outline-variant/30 chat-shadow">
+            <div class="flex items-center gap-4">
+                <button class="md:hidden p-2 hover:bg-surface-container-low rounded-full transition-colors">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <div class="relative">
+                    <img class="w-10 h-10 rounded-full object-cover" data-alt="A detailed portrait of Alex Rivers for a profile header, showing a person with short brown hair and a calm expression. The background is a blurred high-end tech office with soft lighting. The colors are dominated by bright whites and professional blues, ensuring a clean and modern appearance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6FrvBQD_h53huEOhOq49pZ9BWxEC_hwWSIrCIIQ7MO0TxhbNM3j-Xf7MxiloG4Bqra5rBQzamM70SNNIuWkQakdORBkz-mL_WgHthEO8E8mZWZ-BwQ32GKIkKPt6azKe9nEMskGIaaelog8phF39gvte7S0lx82EgLb8cQnpA_fNCgqypJR9vXuiTmRvZIL8E_a-f2vsSJXALP88mB8iHvO7mEw6ElI3SJdSkjuNi3JY6YMc9_hEgczEcYzDETFtT3_m2PUjWX2Hg">
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-[#00CED1] border-2 border-white rounded-full"></span>
+                </div>
+                <div>
+                    <h2 class="font-headline-md text-body-lg font-bold text-on-surface leading-tight">Alex Rivers</h2>
+                    <div class="flex items-center gap-1.5">
+                        <span class="w-2 h-2 rounded-full bg-[#00CED1] animate-pulse"></span>
+                        <p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Online</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button class="p-2 text-on-surface-variant hover:bg-primary-container/10 hover:text-primary rounded-full transition-all active:scale-90">
+                <span class="material-symbols-outlined">call</span>
+                    </button>
+                    <button class="p-2 text-on-surface-variant hover:bg-primary-container/10 hover:text-primary rounded-full transition-all active:scale-90">
+                    <span class="material-symbols-outlined">videocam</span>
+                </button>
+            <div class="w-px h-6 bg-outline-variant mx-2"></div>
+                <button class="p-2 text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all">
+                    <span class="material-symbols-outlined">more_vert</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- messages area -->
+        <div class="flex-1 overflow-y-auto p-8 space-y-6 z-10 scrollbar-hide">
+            <div class="flex-1 overflow-y-auto p-8 space-y-6 z-10 scrollbar-hide">
+
+
+                <div class="flex justify-center">
+                    <span class="px-4 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded-full uppercase tracking-widest">Today</span>
+                </div>
+                                    <!-- Received Message -->
+                                     <!-- First message in a group — show avatar -->
+                   <!-- Single image -->
+<app-chat-message
+  [isSent]="false"
+  content="I've attached a quick mockup. Thoughts?"
+  time="10:45 AM"
+  avatarUrl="https://..."
+  [showAvatar]="true"
+  [attachments]="[{ type: 'image', url: 'https://...', name: 'mockup.png' }]">
+</app-chat-message>
+
+<!-- 2 images side-by-side -->
+<app-chat-message
+  [isSent]="false"
+  content="Here are both dashboard views."
+  time="10:46 AM"
+  [showAvatar]="false"
+  [attachments]="[
+    { type: 'image', url: 'https://.../chart1.png' },
+    { type: 'image', url: 'https://.../chart2.png' }
+  ]">
+</app-chat-message>
+
+<!-- 3 images (masonry: first spans 2 cols + 2 rows) -->
+<app-chat-message
+  [isSent]="false"
+  content="Full gallery from the design review."
+  time="10:47 AM"
+  [showAvatar]="false"
+  [attachments]="[
+    { type: 'image', url: 'https://.../main.jpg' },
+    { type: 'image', url: 'https://.../thumb1.jpg' },
+    { type: 'image', url: 'https://.../thumb2.jpg' }
+  ]">
+</app-chat-message>
+
+<!-- 4+ images (4th shows +N overlay) -->
+<app-chat-message
+  [isSent]="false"
+  content="All the screenshots from the session."
+  time="10:48 AM"
+  [showAvatar]="false"
+  [attachments]="[
+    { type: 'image', url: 'https://.../1.jpg' },
+    { type: 'image', url: 'https://.../2.jpg' },
+    { type: 'image', url: 'https://.../3.jpg' },
+    { type: 'image', url: 'https://.../4.jpg' },
+    { type: 'image', url: 'https://.../5.jpg' },
+    { type: 'image', url: 'https://.../6.jpg' }
+  ]">
+</app-chat-message>
+
+<!-- Mixed: image + file -->
+<app-chat-message
+  [isSent]="false"
+  content="Mockup + specs attached."
+  time="10:50 AM"
+  [showAvatar]="false"
+  [attachments]="[
+    { type: 'image', url: 'https://.../mockup.png', name: 'mockup.png' },
+    { type: 'file', name: 'Design_Specs_v2.pdf', size: '2.4 MB', fileType: 'PDF' }
+  ]">
+</app-chat-message>
+
+<!-- Sent with file -->
+<app-chat-message
+  [isSent]="true"
+  content="Here are the updated specs."
+  time="10:50 AM"
+  status="delivered"
+  [attachments]="[
+    { type: 'file', name: 'Design_Specs_v2.pdf', size: '2.4 MB', fileType: 'PDF' }
+  ]">
+</app-chat-message>
+                                    
+            </div>
+        </div>
+
+
+        <!-- Message Input Area -->
+        <footer class="z-50 p-6 bg-transparent">
+            <div class="max-w-4xl mx-auto glass-panel chat-shadow rounded-full p-2 flex items-center gap-2 border border-outline-variant/20">
+                <button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all group">
+                    <span class="material-symbols-outlined group-hover:text-primary transition-colors">add</span>
+                </button>
+                <div class="flex-1 flex items-center px-2">
+                    <input class="w-full bg-transparent border-none focus:ring-0 text-body-md py-2 placeholder-on-surface-variant/50" placeholder="Type a message..." type="text">
+                </div>
+                <div class="flex items-center gap-1">
+                    <button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all group">
+                        <span class="material-symbols-outlined group-hover:text-primary transition-colors">mood</span>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all group">
+                        <span class="material-symbols-outlined group-hover:text-primary transition-colors">mic</span>
+                    </button>
+                    <button class="w-12 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary/90 active:scale-90 transition-all shadow-md shadow-primary/20">
+                        <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">send</span>
+                    </button>
+                </div>
+            </div>
+        </footer>
+    </main>
+</div>
