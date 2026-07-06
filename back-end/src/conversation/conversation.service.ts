@@ -44,6 +44,8 @@ export class ConversationService {
           throw new BadRequestException();
         }
         
+        console.log(senderId, receiverId);
+        
         const existingConversation = await this.checkConversationOneToOneExist(senderId, receiverId);
 
         if (existingConversation) {

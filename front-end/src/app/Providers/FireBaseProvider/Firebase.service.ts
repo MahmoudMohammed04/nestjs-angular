@@ -66,7 +66,7 @@ export class FirebaseService {
     async signIn(email: string, password: string , rememberMe: boolean = false)
     {
         try{
-            
+            await this.signOut();
             await setPersistence(this.auth,rememberMe ? browserLocalPersistence : browserSessionPersistence);
             const userCredential = await signInWithEmailAndPassword(this.auth,email,password);
             const user = userCredential.user;
@@ -84,6 +84,7 @@ export class FirebaseService {
     async creatAccount(email: string, password: string , rememberMe: boolean = false)
     {
         try{
+            await this.signOut();
             await setPersistence(this.auth,rememberMe ? browserLocalPersistence : browserSessionPersistence);
             const userCredential = await createUserWithEmailAndPassword(this.auth,email,password);
             const user = userCredential.user;
@@ -118,7 +119,7 @@ export class FirebaseService {
     async signInWithGoogle()
     {
         try{
-            
+            await this.signOut();
             const result = await signInWithPopup(this.auth,this.GoogleProvider);
             const user = result.user;
             console.log(user);
@@ -137,12 +138,13 @@ export class FirebaseService {
         
       if (!user) return null;
         
-      return await user.getIdToken(true);
+      return await user.getIdToken();
     }
 
     async signOut()
     {
         await this.auth.signOut();
+        this.userSubject.next(null);
     }
 
     getUserId()
