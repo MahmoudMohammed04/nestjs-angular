@@ -1,0 +1,23 @@
+
+   <!-- Message Input Area -->
+        <footer class="z-50 p-6 bg-transparent">
+            <div class="max-w-4xl mx-auto glass-panel chat-shadow rounded-full p-2 flex items-center gap-2 border border-outline-variant/20">
+                <button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all group">
+                    <span class="material-symbols-outlined group-hover:text-primary transition-colors">add</span>
+                </button>
+                <div class="flex-1 flex items-center px-2">
+                    <input (keyup.enter)="send()" [(ngModel)]="content" class="w-full bg-transparent border-none focus:ring-0 text-body-md py-2 placeholder-on-surface-variant/50" placeholder="Type a message..." type="text">
+                </div>
+                <div class="flex items-center gap-1">
+                    <button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all group">
+                        <span class="material-symbols-outlined group-hover:text-primary transition-colors">mood</span>
+                    </button>
+                    <button class="w-10 h-10 flex items-center justify-center text-on-surface-variant hover:bg-surface-container-low rounded-full transition-all group">
+                        <span class="material-symbols-outlined group-hover:text-primary transition-colors">mic</span>
+                    </button>
+                    <button (click)="send()" class="w-12 h-10 bg-primary text-white rounded-full flex items-center justify-center hover:bg-primary/90 active:scale-90 transition-all shadow-md shadow-primary/20">
+                        <span class="material-symbols-outlined" style="font-variation-settings: &quot;FILL&quot; 1;">send</span>
+                    </button>
+                </div>
+            </div>
+        </footer>

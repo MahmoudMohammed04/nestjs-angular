@@ -30,7 +30,8 @@ model Conversation{
   name String?
   imageUrl String?
   isGroup Boolean
-  lastMessageId Int?
+  lastMessageId Int? @unique
+  lastMessage Message? @relation(name:"lastMessageConversation",references: [id],fields: [lastMessageId])
   lastMessageTime DateTime?
   membersCount Int
 
@@ -73,6 +74,8 @@ model Message{
   conversationId Int 
   conversation Conversation @relation(fields: [conversationId], references: [id])
 
+
+
   senderId String
   sender User @relation(fields: [senderId],references: [id])
 
@@ -82,14 +85,21 @@ model Message{
   readByMembers ConversationMember[] @relation("lastReadedMessage")
   deliveredByMembers ConversationMember[] @relation("lastDeliveredMessage")
 
+  conversationLastMessage Conversation? @relation(name: "lastMessageConversation")
+
 }
 
 model MessageFile{
   id Int @id @default(autoincrement())
   fileUrl String
-  
+  fileType FileType
   messageId Int
   message Message @relation(fields: [messageId],references: [id])
+}
+
+enum FileType {
+  IMG
+  BDF
 }
 
 model MessageStatus{

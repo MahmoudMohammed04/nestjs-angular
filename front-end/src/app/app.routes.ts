@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { firebaseGuard } from './FireBaseProvider/FirebaseGuard';
+import { firebaseGuard } from './Providers/FireBaseProvider/FirebaseGuard';
 
 export const routes: Routes = [
     {path: '', redirectTo: '/Authentication/Login', pathMatch: 'full' },

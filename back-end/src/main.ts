@@ -25,6 +25,10 @@ async function bootstrap() {
     );
   };
     
+  app.enableCors({
+    origin: ['http://localhost:4200'],
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Back-end')
@@ -43,6 +47,7 @@ async function bootstrap() {
     )
     .addSecurityRequirements('Bearer')
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 

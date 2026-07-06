@@ -11,11 +11,21 @@ export class AuthController {
     
     constructor(private readonly AuthService: AuthService) {}
 
-    @UseGuards(AuthGuard('jwt'))
+
+    // @UseGuards(AuthGuard('firebase'))
+    // @Post('test')
+    // async test(@Req() req) {
+    //    return  req.user;
+    // }
+
+    @UseGuards(AuthGuard('firebase'))
     @Post('register')
     @ApiBody({ type: CreateAccountDto })
     async createAccount(@Req() req,@Body() dto: CreateAccountDto) {
-       return  await this.AuthService.createAccount({id: req.user.id,email: req.user.email,pictureUrl: req.user.pictureUrl},dto);
+        
+        const pictureUrl = `${req.protocol}://${req.headers.host}/uploads/images/default.jpg`;
+        
+       return  await this.AuthService.createAccount({id: req.user.user_id,email: req.user.email,pictureUrl:pictureUrl},dto);
     }
 
     

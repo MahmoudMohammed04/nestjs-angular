@@ -12,8 +12,20 @@
 
     <!-- Conversation List -->
     <div class="flex-1 overflow-y-auto scrollbar-hide">
-        <app-coversation-item [selected]="true"></app-coversation-item>
-        <app-coversation-item ></app-coversation-item>
+        @for(con of chatService.conversations(); track $index)
+        {
+            <app-coversation-item
+              [selected]="con.selected"
+              [conversationId]="con.id"
+              [conversationImage]="con.imageUrl"
+              [conversationLastMessage]="con.lastMessageContent"
+              [conversationLastMessageTime]="con.lastMessageTime?.toDateString()"
+              [conversationName]="con.name"
+              [conversationOnline]="con.userOnline"
+              [conversationUnreadMessages]="con.unreadMessageCount">
+            </app-coversation-item>
+        } 
+        
     </div>
     
     <!-- Bottom Navigation -->

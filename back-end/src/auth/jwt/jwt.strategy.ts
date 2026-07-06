@@ -1,30 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy, ExtractJwt } from 'passport-jwt';
-import * as jwksRsa from 'jwks-rsa';
+import { Strategy } from 'passport-custom';
+import { FirebaseService } from './firebaseAdmin';
+import { Request } from 'express';
+
+
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor() {
-    // console.log(process.env.AUTH0_DOMAIN);
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-
-      audience: process.env.AUTH0_AUDIENCE,
+export class FirbaseStrategy extends PassportStrategy(Strategy,'firebase') {
  
-      issuer: `https://${process.env.AUTH0_DOMAIN}/`,
-
-      algorithms: ['RS256'],
-
-      secretOrKeyProvider: jwksRsa.passportJwtSecret({
-        cache: true,
-        rateLimit: true,
-        jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
-      }),
-    });
+    constructor(private readonly firebaseService: FirebaseService) {
+    super();
   }
+  async validate(req: Request) {
+    const auth = req.headers.authorization;
 
-  async validate(payload: any) {
-    return payload;
+    if(!auth?.startsWith('Bearer '))
+    {
+      throw new UnauthorizedException();
+    }
+
+    const token = auth.split(' ')[1];
+
+    try{
+
+      const decodedToken = await this.firebaseService.getAuth().verifyIdToken(token);
+      return decodedToken;
+    }
+    catch{
+       throw new UnauthorizedException();
+    }
   }
 }

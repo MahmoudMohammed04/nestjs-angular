@@ -7,5 +7,8 @@ export const environment = {
     storageBucket: "chat-app-c37a3.firebasestorage.app",
     messagingSenderId: "175565513697",
     appId: "1:175565513697:web:37357c398b3fc25971e8a0",
+  },
+  apiDomain: {
+    domain: 'http://localhost:3000'
   }
 };

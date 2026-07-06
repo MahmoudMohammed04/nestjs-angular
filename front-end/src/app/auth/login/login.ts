@@ -2,7 +2,7 @@ import { Component, Inject, inject, signal, ViewEncapsulation } from '@angular/c
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RedirectCommand, Router, RouterLink, RouterModule } from '@angular/router';
-import { FirebaseService } from '../../FireBaseProvider/Firebase.service';
+import { FirebaseService } from '../../Providers/FireBaseProvider/Firebase.service';
 
 @Component({
   selector: 'app-login',
@@ -37,7 +37,7 @@ export class LoginComponent {
     this.isLoading.set(true);
 
     
-    const result =  await this.firebaseService.singIn(this.email, this.password);
+    const result =  await this.firebaseService.signIn(this.email, this.password,this.rememberMe);
 
     if(!result.success && result.errorMessage)
       this.errorMessage.set(result.errorMessage);

@@ -2,9 +2,10 @@ import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/
 import { provideRouter } from '@angular/router';
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { provideFirebase } from './FireBaseProvider/FirebaseProvider';
+import { provideFirebase } from './Providers/FireBaseProvider/FirebaseProvider';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { firebaseInterceptor } from './FireBaseProvider/FirebaseInterceptor';
+import { firebaseInterceptor } from './Providers/FireBaseProvider/FirebaseInterceptor';
+import { provideAPI } from './Providers/APIProvider/apiProvider';
 
 
 export const appConfig: ApplicationConfig = {
@@ -14,6 +15,7 @@ export const appConfig: ApplicationConfig = {
     provideFirebase(environment.firebase),
     provideHttpClient(
       withInterceptors([firebaseInterceptor])
-    )
+    ),
+    provideAPI(environment.apiDomain)
   ]
 };

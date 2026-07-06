@@ -1,4 +1,11 @@
 <div class="flex h-screen w-full ">
-    <app-conversations-panal class="basis-1/5 max-w-1/5"></app-conversations-panal>
-    <app-chat-panal class="basis-4/5"></app-chat-panal>
+    <app-conversations-panal 
+    class="basis-1/5 max-w-1/5">
+    </app-conversations-panal>
+    @if(chatService.currentConversationId() !== null)
+    {
+       <app-chat-panal
+        class="basis-4/5"></app-chat-panal>
+    }
 </div>
+ 

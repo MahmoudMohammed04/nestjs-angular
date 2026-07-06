@@ -1,0 +1,100 @@
+       <!-- messages area -->
+        <div class="flex-1 overflow-y-auto p-8 space-y-6 z-10 scrollbar-hide">
+            <div class="flex-1 overflow-y-auto p-8 space-y-6 z-10 scrollbar-hide">
+
+                <div class="flex justify-center">
+                    <span class="px-4 py-1 bg-surface-container text-on-surface-variant text-[10px] font-bold rounded-full uppercase tracking-widest">Today</span>
+                </div>
+                                    <!-- Received Message -->
+                                     <!-- First message in a group — show avatar -->
+                   <!-- Single image -->
+                <!-- <app-chat-message
+                  [isSent]="false"
+                  content="I've attached a quick mockup. Thoughts?"
+                  time="10:45 AM"
+                  avatarUrl="https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg"
+                  [showAvatar]="true"
+                  [attachments]="[{ type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg', name: 'mockup.png' }]">
+                </app-chat-message> -->
+
+                <!-- 2 images side-by-side -->
+                <!-- <app-chat-message
+                  [isSent]="false"
+                  content="Here are both dashboard views."
+                  time="10:46 AM"
+                  [showAvatar]="false"
+                  [attachments]="[
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' },
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' }
+                  ]">
+                </app-chat-message> -->
+
+                <!-- 3 images (masonry: first spans 2 cols + 2 rows) -->
+                <!-- <app-chat-message
+                  [isSent]="false"
+                  content="Full gallery from the design review."
+                  time="10:47 AM"
+                  [showAvatar]="false"
+                  [attachments]="[
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' },
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' },
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' }
+                  ]">
+                </app-chat-message> -->
+
+                <!-- 4+ images (4th shows +N overlay) -->
+                <!-- <app-chat-message
+                  [isSent]="false"
+                  content="All the screenshots from the session."
+                  time="10:48 AM"
+                  [showAvatar]="false"
+                  [attachments]="[
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' },
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' },
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' },
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' },
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' },
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg' }
+                  ]">
+                </app-chat-message> -->
+
+                <!-- Mixed: image + file -->
+                <!-- <app-chat-message
+                  [isSent]="false"
+                  content="Mockup + specs attached."
+                  time="10:50 AM"
+                  [showAvatar]="false"
+                  [attachments]="[
+                    { type: 'image', url: 'https://i.pinimg.com/736x/2d/95/e5/2d95e5886fc4c65a6778b5fee94a7d59.jpg', name: 'mockup.png' },
+                    { type: 'file', name: 'Design_Specs_v2.pdf', size: '2.4 MB', fileType: 'PDF' }
+                  ]">
+                </app-chat-message> -->
+
+                <!-- Sent with file -->
+                <!-- <app-chat-message
+                  [isSent]="true"
+                  content="Here are the updated specs."
+                  time="10:50 AM"
+                  [status]="messageStatus.sent"
+                  [attachments]="[
+                    { type: 'file', name: 'Design_Specs_v2.pdf', size: '2.4 MB', fileType: 'PDF' }
+                  ]">
+                </app-chat-message> -->
+
+                @for(msg of chatService.currentChatMessages(); track $index)
+                {
+                    <app-chat-message
+                      [isSent]="msg.isSent"
+                      [conversationId]="msg.conversationId"
+                      [content]="msg.content"
+                      [time]="msg.sentAt.toDateString()"
+                      [status]="msg.status"
+                      [showAvatar]="msg.showAvatar"
+                      [avatarUrl]="msg.avatarUrl"
+                      [senderName]="msg.senderName"
+                      [attachments]="msg.attachments">
+                    </app-chat-message>
+                }
+                                    
+            </div>
+        </div>
