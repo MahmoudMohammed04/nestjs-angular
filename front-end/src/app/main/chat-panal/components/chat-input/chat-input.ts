@@ -32,10 +32,10 @@ export class ChatInput {
       attachments: []
     }
 
+    this.content = '';
     await this.chatService.sendMessage(message.content);
 
      
 
-    this.content = '';
   }
 }

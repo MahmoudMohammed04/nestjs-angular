@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -33,10 +34,17 @@ export class ConversationController {
  
   @Get(':id/messages')
   getConversationMessages(
+    @Req() req: any,
     @Param('id') conversationId: string,
+    @Query('limit') limit?: string,
+    @Query('cursor') cursor?: string,
   ) {
+
     return this.conversationService.getConversationMessages(
+      req.user.user_id,
       Number(conversationId),
+      limit ? Number(limit) : 30,
+      cursor ? Number(cursor) : undefined,
     );
   }
 

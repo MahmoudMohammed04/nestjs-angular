@@ -16,10 +16,9 @@
                                 <span class="text-[10px] text-on-surface-variant">{{conversationLastMessageTime}}</span>   <!-- message time -->
                             }
                         </div>
-                    @if(conversationLastMessage !== undefined)
-                    {
-                        <p class="text-caption text-on-surface-variant truncate font-medium">{{conversationLastMessage}}</p>  <!-- message content -->
-                    }
+                   
+                        <p class="text-caption text-on-surface-variant truncate font-medium">{{conversationLastMessage ?? "Start a conversation..."}}</p>  <!-- message content -->
+                    
                 </div>
 
                 @if (conversationUnreadMessages !== undefined && conversationUnreadMessages > 0) 

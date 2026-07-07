@@ -67,8 +67,6 @@ model Message{
   id Int @id  @default(autoincrement())
   content String
   sentAt DateTime
-  deliveredCount Int @default(0)
-  readCount Int @default(0)
   conversationMembersCount Int
 
   conversationId Int 

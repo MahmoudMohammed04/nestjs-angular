@@ -81,13 +81,13 @@
                   ]">
                 </app-chat-message> -->
 
-                @for(msg of chatService.currentChatMessages(); track $index)
+                @for(msg of chatService.currentMessages(); track msg.messageId)
                 {
                     <app-chat-message
                       [isSent]="msg.isSent"
                       [conversationId]="msg.conversationId"
                       [content]="msg.content"
-                      [time]="msg.sentAt.toDateString()"
+                      [time]="msg.sentAt.toLocaleTimeString([],{hour: '2-digit', minute:'2-digit'})"
                       [status]="msg.status"
                       [showAvatar]="msg.showAvatar"
                       [avatarUrl]="msg.avatarUrl"

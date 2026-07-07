@@ -12,9 +12,20 @@ export class ConversationApiService {
     return this.api.get('conversation');
   }
 
-  getMessages(conversationId: number) : Observable<any[]> {
-    return this.api.get(`conversation/${conversationId}/messages`);
-  }
+  getMessages(
+  conversationId: number,
+  limit = 30,
+  cursor?: number
+  ): Observable<any> {
+
+    return this.api.get(
+      `conversation/${conversationId}/messages`,
+      {
+        limit,
+        ...(cursor ? { cursor } : {})
+      }
+    );
+  } 
 
   createOneToOne(receiverId: string) {
     return this.api.post('conversation/one-to-one', {

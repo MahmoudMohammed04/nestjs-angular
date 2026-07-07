@@ -92,10 +92,11 @@ export class MessagingGateway {
       userId,
     );
     
+    console.log(result);
     if(result.conversationMembersCount === result.deliveredCount)
     this.server.to(`user${result.senderId}`).emit('messageDelivered', result);
 
-   
+ 
   }
 
 

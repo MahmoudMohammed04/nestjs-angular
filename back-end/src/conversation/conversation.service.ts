@@ -95,26 +95,31 @@ export class ConversationService {
     async getConversationsByUserId(userId: string) {
 
     const conversations = await this.prisma.conversation.findMany({
-       where: {
-         members: {
-           some: {
-             userId,
-           },
-         },
-       },
-       orderBy: {
-         lastMessageTime: 'desc',
-       },
-       include: {
-        lastMessage: {
-            select: {
-                content: true
-            }
+      where: {
+        members: {
+          some: {
+            userId,
+          },
         },
-         members: {
+      },
+
+      orderBy: {
+        lastMessageTime: 'desc',
+      },
+
+      include: {
+        lastMessage: {
+          select: {
+            content: true,
+          },
+        },
+
+        members: {
           select: {
             userId: true,
+
             lastReadedMessageId: true,
+
             user: {
               select: {
                 id: true,
@@ -124,40 +129,99 @@ export class ConversationService {
             },
           },
         },
-       },
-     });
-    
-      const result = await Promise.all(
-  conversations.map(async (conversation) => {
-    const { members, ...rest } = conversation;
-
-    if (conversation.isGroup) {
-      return rest;
-    }
-
-    const otherUser = conversation.members.find(
-      (member) => member.userId !== userId,
-    );
-
-    const unreadCount = await this.prisma.message.count({
-      where: {
-        conversationId: conversation.id,
-        id: {
-          gt: otherUser?.lastReadedMessageId ?? 0,
-        },
       },
     });
 
-    return {
-      ...rest,
-      name: otherUser?.user?.username ?? conversation.name,
-      imageUrl: otherUser?.user?.pictureUrl ?? conversation.imageUrl,
-      unreadedMessagesCount: unreadCount,
-    };
-  }),
-);
 
-return result;
+    const result = await Promise.all(
+      conversations.map(async (conversation) => {
+
+        const currentMember = conversation.members.find(
+          member => member.userId === userId
+        );
+
+
+        const unreadCount = await this.prisma.message.count({
+          where: {
+            conversationId: conversation.id,
+
+            id: {
+              gt: currentMember?.lastReadedMessageId ?? 0,
+            },
+
+            // don't count your own messages
+            senderId: {
+              not: userId,
+            },
+          },
+        });
+
+
+
+        // private chat
+        if (!conversation.isGroup) {
+
+          const otherUser = conversation.members.find(
+            member => member.userId !== userId
+          );
+
+
+          return {
+            id: conversation.id,
+
+            name:
+              otherUser?.user.username ??
+              conversation.name,
+
+            imageUrl:
+              otherUser?.user.pictureUrl ??
+              conversation.imageUrl,
+
+
+            lastMessageContent:
+              conversation.lastMessage?.content ?? '',
+
+
+            lastMessageTime:
+              conversation.lastMessageTime,
+
+
+            unreadedMessagesCount:
+              unreadCount,
+          };
+        }
+
+
+
+        // group chat
+        return {
+          id: conversation.id,
+
+          name:
+            conversation.name ??
+            'Group',
+
+          imageUrl:
+            conversation.imageUrl,
+
+
+          lastMessageContent:
+            conversation.lastMessage?.content ?? '',
+
+
+          lastMessageTime:
+            conversation.lastMessageTime,
+
+
+          unreadedMessagesCount:
+            unreadCount,
+        };
+
+      }),
+    );
+
+
+    return result;
     }
 
     async addUserToConversation(conversationId: number, userId: string) {
@@ -217,20 +281,78 @@ return result;
         })
     }
 
-    async getConversationMessages(conversationId: number) {
-        return this.prisma.message.findMany({
-            where: {
-                conversationId: conversationId,
+    async getConversationMessages(
+      userId: string,
+      conversationId: number,
+      limit = 30,
+      cursor?: number,
+    ) {
+      const conversationMemberStatus = await this.prisma.conversationMember.findUnique({
+        where: {
+          userId_conversationId: {
+            userId,
+            conversationId,
+          },
+        },
+      });
+      
+      if (!conversationMemberStatus) {
+        throw new BadRequestException('Conversation member does not exist');
+      }
+
+      const messages = await this.prisma.message.findMany({
+        where: {
+          conversationId,
+        },
+      
+        take: limit,
+      
+        ...(cursor && {
+          skip: 1,
+          cursor: {
+            id: cursor,
+          },
+        }),
+      
+        orderBy: {
+          id: 'desc',
+        },
+      
+        include: {
+          sender: {
+            select: {
+              id: true,
+              username: true,
+              pictureUrl: true,
             },
-            include: {
-                sender: {
-                    select: {
-                        id: true,
-                        username: true,
-                        pictureUrl: true,
-                    },
-                },
-            },
-        });
+          },
+          messageStatus: true,
+        },
+      });
+
+      return messages.map(message => ({
+
+        ...message,
+
+
+        deliveredCount:
+          message.messageStatus.filter(
+            s =>
+              s.status === 'delivered' ||
+              s.status === 'Seen'
+          ).length,
+        
+        
+        readCount:
+          message.messageStatus.filter(
+            s =>
+              s.status === 'Seen'
+          ).length,
+        
+        
+     
+        messageStatus: undefined,
+        
+      }));
     }
 }

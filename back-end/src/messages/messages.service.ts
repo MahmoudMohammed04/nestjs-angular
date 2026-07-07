@@ -22,8 +22,6 @@ export class MessagesService {
                     conversationId: conversationId,
                     content: content,
                     conversationMembersCount: conversation.membersCount-1,
-                    deliveredCount: 0,
-                    readCount: 0,
                     sentAt: new Date(),
                 }
             });
@@ -50,89 +48,145 @@ export class MessagesService {
         })
     }
 
-    async deliverMessage(messageId: number,userId: string) {
-        return this.prisma.$transaction(async (tx) => {
+    async deliverMessage(messageId: number, userId: string) {
+      return this.prisma.$transaction(async (tx) => {
 
-            const message = await tx.message.update({
-                where: {
-                    id: messageId,
-                },
-                data: {
-                    deliveredCount: {
-                        increment: 1,
-                    },
-                }
-            })
+        const message = await tx.message.findUnique({
+          where: { id: messageId }
+        });
 
-           
-            await tx.messageStatus.update({
-                where: {
-                    messageId_userId: {
-                        messageId: messageId,
-                        userId: userId
-                    }
-                },
-                data: {
-                    status: 'delivered',
-                }
-            })
-
-            await tx.conversationMember.update({
-                where: {
-                    userId_conversationId: {
-                        userId: userId,
-                        conversationId: message.conversationId
-                    }
-                },
-                data: {
-                    lastDeliveredMessageId: message.id,
-                }
-            })
-
-            return message
-        })
-    }
-
-    async seenMessage(messageId: number,userId: string) {
-        return this.prisma.$transaction(async (tx) => {
-
-            const message = await tx.message.update({
-                where: {
-                    id: messageId,
-                },
-                data: {
-                    readCount: {
-                        increment: 1,
-                    },
-                }
-            })
-
+        if (!message) {
+          throw new BadRequestException('Message not found');
+        }
         
-            await tx.messageStatus.update({
-                where: {
-                    messageId_userId: {
-                        messageId: messageId,
-                        userId: userId
-                    }
+        const conversationMemebrStatus = await tx.conversationMember.findUnique({
+            where: {
+                userId_conversationId: {
+                    userId,
+                    conversationId: message.conversationId,
                 },
-                data: {
-                    status: 'Seen',
-                }
-            })
-
-            await tx.conversationMember.update({
-                where: {
-                    userId_conversationId: {
-                        userId: userId,
-                        conversationId: message.conversationId
-                    }
-                },
-                data: {
-                    lastReadedMessageId: message.id,
-                }
-            })
-
-            return message
+            }
         })
+
+        if(!conversationMemebrStatus) throw new BadRequestException('Conversation member does not exist');
+
+        await tx.messageStatus.updateMany({
+          where: {
+            userId,
+            status: 'None',
+            messages: {
+              conversationId: message.conversationId,
+              id: {
+                gt: conversationMemebrStatus.lastDeliveredMessageId ?? 0,
+                lte: messageId,
+              },
+            },
+          },
+          data: {
+            status: 'delivered',
+          },
+        })
+
+        await tx.conversationMember.update({
+            where: {
+                userId_conversationId: {
+                    userId,
+                    conversationId: message.conversationId,
+                },
+            },
+            data: {
+                lastDeliveredMessageId: messageId,
+            },
+        
+        });  
+
+        return {
+            ...message,
+            deliveredCount: await tx.messageStatus.count({
+                where: {
+                    messageId,
+                    status: 'delivered',
+                },
+            }),
+            readCount: await tx.messageStatus.count({
+                where: {
+                    messageId,
+                    status: 'Seen',
+                },
+            }),
+        };
+    })
     }
+
+    async seenMessage(messageId: number, userId: string) {
+      return this.prisma.$transaction(async (tx) => {
+
+        const message = await tx.message.findUnique({
+          where: { id: messageId }
+        });
+
+        if (!message) {
+          throw new BadRequestException('Message not found');
+        }
+        
+        const conversationMemebrStatus = await tx.conversationMember.findUnique({
+            where: {
+                userId_conversationId: {
+                    userId,
+                    conversationId: message.conversationId,
+                },
+            }
+        })
+
+        if(!conversationMemebrStatus) throw new BadRequestException('Conversation member does not exist');
+
+        await tx.messageStatus.updateMany({
+          where: {
+            userId,
+            status: { in: ['None', 'delivered'] },
+            messages: {
+              conversationId: message.conversationId,
+              id: {
+                gt: conversationMemebrStatus.lastReadedMessageId ?? 0,
+                lte: messageId,
+              },
+            },
+          },
+          data: {
+            status: 'Seen',
+          },
+        })
+
+        await tx.conversationMember.update({
+            where: {
+                userId_conversationId: {
+                    userId,
+                    conversationId: message.conversationId,
+                },
+            },
+            data: {
+                lastReadedMessageId: messageId,
+                lastDeliveredMessageId: messageId,
+            },
+        
+        });  
+
+        return {
+            ...message,
+            deliveredCount: await tx.messageStatus.count({
+                where: {
+                    messageId,
+                    status: 'delivered',
+                },
+            }),
+            readCount: await tx.messageStatus.count({
+                where: {
+                    messageId,
+                    status: 'Seen',
+                },
+            }),
+        };
+    })
+    }
+    
 }
