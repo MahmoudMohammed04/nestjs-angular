@@ -36,6 +36,10 @@ export class ChatSocketService{
         message.attachments = [];
         this.store.addMessage(message);
         this.coversationStore.update(message.conversationId,{lastMessageTime:message.sentAt,lastMessageContent:message.content},message.conversationId===this.store.currentConversation());
+
+        if(message.conversationId===this.store.currentConversation())
+        this.api.emit(this.sendMessageSeenSocket,{messageId:message.id});
+        else
         this.api.emit(this.sendMessageDeliveredSocket,{messageId:message.id});
     });
 

@@ -32,9 +32,9 @@ export class MessageService{
 
     private convertState(message:any){
 
-    if(message.readCount === message.conversationMembersCount) return MessageStatus.seen;
-    else if(message.deliveredCount === message.conversationMembersCount) return MessageStatus.delivered;
-    else return MessageStatus.sent
+        if(message.readCount === message.conversationMembersCount) return MessageStatus.seen;
+        else if(message.deliveredCount === message.conversationMembersCount) return MessageStatus.delivered;
+        else return MessageStatus.sent
     }
 
 
@@ -82,27 +82,27 @@ export class MessageService{
     async sendMessage(content:string){
 
 
-    const id = this.store.currentConversation();
-
-    if(!id)
-     return;
-
-
-
-    const message:any = await this.socket.sendMessage({
-      conversationId:id,
-      content
-     });
-
-     console.log(message);
-     message.sentAt = new Date(message.sentAt);
-     message.attachments = [];
-     message.isSent = true;
-     message.status = MessageStatus.sent;
-     message.messageId = message.id;
-
-    this.store.addMessage(message);
-    this.conversationStore.update(id,{lastMessageTime:message.sentAt,lastMessageContent:message.content},true);
+        const id = this.store.currentConversation();
+        
+        if(!id)
+         return;
+    
+    
+    
+        const message:any = await this.socket.sendMessage({
+          conversationId:id,
+          content
+         });
+     
+         console.log(message);
+         message.sentAt = new Date(message.sentAt);
+         message.attachments = [];
+         message.isSent = true;
+         message.status = MessageStatus.sent;
+         message.messageId = message.id;
+     
+        this.store.addMessage(message);
+        this.conversationStore.update(id,{lastMessageTime:message.sentAt,lastMessageContent:message.content},true);
 
     }
 
@@ -111,21 +111,21 @@ export class MessageService{
     markLastMessageSeen(){
 
     
-    const messages = this.store.currentMessages();
+        const messages = this.store.currentMessages();
 
-    if(messages.length===0)
-     return;
+        if(messages.length===0)
+         return;
 
-    const last = messages[messages.length-1];
+        const last = messages[messages.length-1];
 
 
-    if(last && !last.isSent){
+        if(last && !last.isSent){
 
-     this.socket.seenMessage(
-       last.messageId
-     );
+            this.socket.seenMessage(
+              last.messageId
+            );
 
-    }
+        }
 
     }
 
