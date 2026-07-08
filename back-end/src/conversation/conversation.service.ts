@@ -1,11 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createGroupDto } from './dto/createConversation.dto';
+import { MessagingGateway } from 'src/messaging/messaging.gateway';
 
 @Injectable()
 export class ConversationService {
 
-    constructor(private readonly prisma : PrismaService) {}
+    constructor(private readonly prisma : PrismaService,private readonly scoket:MessagingGateway) {}
 
 
    
@@ -32,10 +33,36 @@ export class ConversationService {
                 membersCount: 2,
               },
             ],
+            
           },
+          include: {
+            members: {
+              select: {
+                user: {
+                  select: {
+                    id: true,
+                    username: true,
+                    pictureUrl: true,
+                  },
+                },
+                
+              },
+            },
+          }
         });
 
-        return existingConversation;
+        if (!existingConversation) 
+          return null;
+        
+        const otherUser = existingConversation.members.find((member) => member.user.id !== senderId)?.user;
+
+        if (otherUser) {
+          existingConversation.imageUrl = otherUser.pictureUrl;
+          existingConversation.name = otherUser.username;
+        }
+
+        const conversation = {...existingConversation, members: undefined}
+        return conversation;
     }
 
     async createConversationOneToOne(senderId: string, receiverId: string) {
@@ -43,13 +70,39 @@ export class ConversationService {
         if (senderId === receiverId) {
           throw new BadRequestException();
         }
+
+        const Reciveruser = await this.prisma.user.findUnique({
+            where: {
+              id: receiverId,
+            },
+            select: {
+              id: true,
+              username: true,
+              pictureUrl: true,
+            },
+          }) 
+
+          const user = await this.prisma.user.findUnique({
+            where: {
+              id: senderId,
+            },
+            select: {
+              id: true,
+              username: true,
+              pictureUrl: true,
+            },
+          })
+
+          if (!Reciveruser || !user) {
+            throw new BadRequestException();
+          }
         
         console.log(senderId, receiverId);
         
         const existingConversation = await this.checkConversationOneToOneExist(senderId, receiverId);
 
         if (existingConversation) {
-          return existingConversation;
+          return {...existingConversation,created:false};
         }
 
         return this.prisma.$transaction(async (tx) => {
@@ -66,8 +119,14 @@ export class ConversationService {
               { conversationId: conversation.id, userId: receiverId },
             ],
           });
-      
-          return conversation;
+          
+          
+          const conversationToReciver = {...conversation,imageUrl:user.pictureUrl,name:user.username};
+          this.scoket.server.emit('newConversation', conversationToReciver);
+
+          conversation.imageUrl = Reciveruser.pictureUrl;
+          conversation.name = Reciveruser.username;
+          return {...conversation,created:true};
         });
     }
 

@@ -2,6 +2,7 @@ import { Injectable, signal } from "@angular/core";
 import { ConversationApiService } from "../../Providers/APIProvider/conversationApiService.service";
 import { ConversationStore } from "./conversation.store";
 import { MessageService } from "../messages/message.service";
+import { ConversationDTO } from "../../main/DTOS/conversation.dto";
 
 
 
@@ -20,6 +21,7 @@ constructor(
 
 
 currentConversationId = signal<number|null>(null);
+openSearchWindow = signal(false);
 
 
 
@@ -59,7 +61,32 @@ loadConversations(){
 
 }
 
+async createConversationOneToOne(senderId: string)
+{
 
+  this.api.createOneToOne(senderId).subscribe((data:any)=>{
+    console.log(data);
+    const isExist = this.store.conversations().find(c=>c.id===data.id);
+
+    if(!isExist){
+      const con:ConversationDTO = {
+        id:data.id,
+        name:data.name,
+        imageUrl:data.imageUrl,
+        lastMessageContent:"",
+        lastMessageTime:undefined,
+        unreadMessageCount:0,
+        userOnline:false,
+        selected:false
+      }
+
+      this.store.set([...this.store.conversations(),con]);
+    }
+   
+    this.openSearchWindow.set(false);
+    this.selectConversation(data.id);
+  })
+}
 
 async selectConversation(id:number){
 
@@ -67,7 +94,12 @@ async selectConversation(id:number){
 
     this.currentConversationId.set(id);
 
-
+    this.store.conversations().forEach(c=>{
+      if(c.id===id)
+      c.selected = true;
+      else
+      c.selected = false;
+    })
     await this.messageService.loadMessages(id);
 
 

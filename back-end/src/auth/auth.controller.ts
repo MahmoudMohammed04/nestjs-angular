@@ -24,7 +24,7 @@ export class AuthController {
     async createAccount(@Req() req,@Body() dto: CreateAccountDto) {
         
         const pictureUrl = `${req.protocol}://${req.headers.host}/uploads/images/default.jpg`;
-        
+        console.log(req.user.user_id);
        return  await this.AuthService.createAccount({id: req.user.user_id,email: req.user.email,pictureUrl:pictureUrl},dto);
     }
 

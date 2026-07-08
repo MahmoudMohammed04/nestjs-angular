@@ -18,6 +18,7 @@ export class ChatSocketService{
     private readonly reciveMessageSeenSocket:string = "messageSeen";
     private readonly sendMessageSeenSocket:string = "seenMessage";
     private readonly sendMessageDeliveredSocket:string = "deliverMessage";
+    private readonly reciveNewConverastionSocket:string = "newConversation";
 
     constructor(
     private api:ApiService,
@@ -60,6 +61,10 @@ export class ChatSocketService{
          message.conversationId,
          MessageStatus.seen
         );
+    });
+
+    this.api.on(this.reciveNewConverastionSocket,(conversation:any)=>{
+        this.coversationStore.set([...this.coversationStore.conversations(),conversation]);
     });
 
 

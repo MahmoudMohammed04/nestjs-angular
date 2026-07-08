@@ -14,6 +14,7 @@ export class ChatService {
   conversations: typeof this.conversationStore.conversations;
   currentMessages: typeof this.messageService.currentMessages;
   currentConversationId: typeof this.conversationService.currentConversationId;
+  openSearchWindow: typeof this.conversationService.openSearchWindow
 
   constructor(
     private conversationStore: ConversationStore,
@@ -25,6 +26,7 @@ export class ChatService {
      this.conversations = this.conversationStore.conversations;
      this.currentMessages = this.messageService.currentMessages;
      this.currentConversationId = this.conversationService.currentConversationId;
+     this.openSearchWindow = this.conversationService.openSearchWindow
   }
 
 

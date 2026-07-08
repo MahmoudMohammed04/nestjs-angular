@@ -70,6 +70,7 @@ export class FirebaseService {
             await setPersistence(this.auth,rememberMe ? browserLocalPersistence : browserSessionPersistence);
             const userCredential = await signInWithEmailAndPassword(this.auth,email,password);
             const user = userCredential.user;
+            this.userSubject.next(user);
             console.log(user);
             return new firebaseObjectResult(null,user,true);
         }
@@ -88,6 +89,7 @@ export class FirebaseService {
             await setPersistence(this.auth,rememberMe ? browserLocalPersistence : browserSessionPersistence);
             const userCredential = await createUserWithEmailAndPassword(this.auth,email,password);
             const user = userCredential.user;
+            this.userSubject.next(user);
             console.log(user);
             return new firebaseObjectResult(null,user,true);
         }
@@ -134,11 +136,11 @@ export class FirebaseService {
     }
 
     async getToken() {
-      const user = await this.authReadyPromise;
-        
+      const user = this.auth.currentUser;
+
       if (!user) return null;
-        
-      return await user.getIdToken();
+
+      return await user.getIdToken(true);
     }
 
     async signOut()

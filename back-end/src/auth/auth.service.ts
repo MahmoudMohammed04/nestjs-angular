@@ -14,6 +14,7 @@ export class AuthService {
                 data: {
                     id: req.id,
                     email: req.email,
+                    normalizedEmail: req.email.trim().toUpperCase(),
                     username: dto.username,
                     normalizedUsername: dto.username.trim().toUpperCase(),
                     phone: dto.phone,

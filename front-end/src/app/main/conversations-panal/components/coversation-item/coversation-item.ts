@@ -1,6 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, EventEmitter, inject, Inject, input, Input, Output, signal } from '@angular/core';
-import { ChatService } from '../../../Services/chat.service';
+import { ChatService } from '../../../../Services/chat.service';
 
 
 @Component({

@@ -7,5 +7,6 @@ import { MessagesService } from 'src/messages/messages.service';
 @Module({
     imports: [],
     providers: [MessagesService,MessagingGateway,FirebaseService,PrismaService],
+    exports: [MessagingGateway]
 })
 export class MessagingModule {}

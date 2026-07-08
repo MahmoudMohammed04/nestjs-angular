@@ -1,9 +1,18 @@
 <div class="flex h-screen w-full">
-<section class="w-full md:w-full h-full bg-surface-container-lowest border-r border-outline-variant flex flex-col z-10">
+<section class="w-full md:w-full h-full bg-surface-container-lowest border-r border-outline-variant flex flex-col z-10 relative">
 
+    @if(chatService.openSearchWindow())
+    {
+        <app-sreach-user-window ></app-sreach-user-window>
+    }
+    
+    
     <!-- Search Header -->
     <div class="p-6 border-b border-outline-variant/30">
-        <h2 class="font-headline-md text-headline-md mb-4">Messages</h2>
+        <div class="flex">
+            <h2 class="font-headline-md text-headline-md mb-4">Messages</h2>
+            <span (click)="onClickOpenSearchWindow()" class="material-symbols-outlined text-on-surface-variant ml-45 cursor-pointer">add</span>
+        </div>
             <div class="relative group">
                 <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/4 text-on-surface-variant">search</span>
                 <input class="w-full pl-10 pr-4 py-3 bg-surface-container-low border-transparent focus:border-primary focus:ring-0 rounded-full text-body-md transition-all" placeholder="Search conversations..." type="text">

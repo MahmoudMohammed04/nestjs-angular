@@ -13,6 +13,7 @@ import { MessagingController } from './messaging/messaging.controller';
 import { MessagingModule } from './messaging/messaging.module';
 import { FirebaseService } from './auth/jwt/firebaseAdmin';
 import { FirebaseModule } from './auth/jwt/firebase.module';
+import { UserModule } from './user/user.module';
 
 
 @Module({
@@ -24,7 +25,7 @@ import { FirebaseModule } from './auth/jwt/firebase.module';
         serveRoot: '/uploads'
       }), 
     
-  PrismaModule,AuthModule, ConversationModule, MessagesModule, MessagingModule,FirebaseModule],
+  PrismaModule,AuthModule, ConversationModule, MessagesModule, MessagingModule,FirebaseModule, UserModule],
   providers: [PrismaService, AppService],
   
 })
